@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MiniHelpdesk.Services;
 using MiniHelpdesk.Services.Models;
+using MiniHelpdesk.ViewModels;
 
 namespace MiniHelpdesk.Controllers;
 
@@ -24,17 +25,25 @@ public class TicketsController : Controller
     [HttpGet]
     public IActionResult Create()
     {
-        return View();
+        return View(new CreateTicketViewModel());
     }
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create(CreateTicketRequest request)
+    public async Task<IActionResult> Create(CreateTicketViewModel model)
     {
         if (!ModelState.IsValid)
         {
-            return View(request);
+            return View(model);
         }
+
+        var request = new CreateTicketRequest
+        {
+            Title = model.Title,
+            Description = model.Description,
+            Author = model.Author,
+            FirstCommentContent = model.FirstCommentContent
+        };
 
         try
         {
@@ -46,7 +55,7 @@ public class TicketsController : Controller
         {
             ModelState.AddModelError(string.Empty, exception.Message);
 
-            return View(request);
+            return View(model);
         }
     }
 
@@ -62,9 +71,13 @@ public class TicketsController : Controller
 
         var comments = await _ticketService.GetCommentsAsync(id);
 
-        ViewBag.Comments = comments;
+        var model = new TicketDetailsViewModel
+        {
+            Ticket = ticket,
+            Comments = comments
+        };
 
-        return View(ticket);
+        return View(model);
     }
 
     [HttpPost]
