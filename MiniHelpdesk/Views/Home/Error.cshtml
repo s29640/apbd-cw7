@@ -1,0 +1,18 @@
+﻿@model MiniHelpdesk.Models.ErrorViewModel
+
+@{
+    ViewData["Title"] = "Error";
+}
+
+<h1>Application error</h1>
+
+<p>
+    An unexpected error occurred while processing the request.
+</p>
+
+@if (Model.ShowRequestId)
+{
+    <p>
+        <strong>Request ID:</strong> @Model.RequestId
+    </p>
+}

@@ -2,10 +2,12 @@ using MiniHelpdesk.Contracts;
 using MiniHelpdesk.Infrastructure.Database;
 using MiniHelpdesk.Infrastructure.Repositories;
 using MiniHelpdesk.Services;
+using MiniHelpdesk.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddSingleton<IRequestLogWriter, FileRequestLogWriter>();
 builder.Services.AddScoped<ISqlSession, SqlSession>();
 builder.Services.AddScoped<IUnitOfWork, SqlUnitOfWork>();
 builder.Services.AddScoped<ITicketRepository, TicketRepository>();
@@ -21,25 +23,29 @@ builder.Services.AddControllersWithViews(options =>
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+Console.WriteLine($"ENV = {app.Environment.EnvironmentName}");
+
+app.UseHttpsRedirection();
+
+app.MapStaticAssets();
+
+app.UseExceptionHandler("/Home/Error");
+
 if (!app.Environment.IsDevelopment())
 {
-    app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
-app.UseHttpsRedirection();
 app.UseRouting();
 
-app.UseAuthorization();
+app.UseMiddleware<RequestTimingMiddleware>();
 
-app.MapStaticAssets();
+app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}")
     .WithStaticAssets();
 
-
 app.Run();
+
