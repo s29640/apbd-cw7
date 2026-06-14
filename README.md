@@ -33,7 +33,7 @@ dotnet build
 6. Uruchom aplikację:
 
 ```bash
-dotnet run --project MiniHelpdesk
+dotnet run --project MiniHelpdesk --launch-profile https
 ```
 
 7. Otwórz przeglądarkę i przejdź pod adres wyświetlony przez aplikację (domyślnie `https://localhost:7237`).
@@ -71,6 +71,16 @@ Middleware odpowiada za logowanie:
 - czasu obsługi żądania.
 
 Middleware jest rejestrowany w pliku `Program.cs`.
+Logi zapisywane są w katalogu `.\MiniHelpdesk\Logs`.
+
+---
+
+## Błędy aplikacji
+
+Do obsługi blędow aplikacji jest robione przekierowanie:
+`app.UseExceptionHandler("/Home/Error");` w `program.cs`
+
+Aby wywołać taki błąd należy dodać zgłoszenie które ma puste Description oraz wypełnione Title, Author i FirstCommentContent. Celowo w TicketRepository jest pozostawiony błąd przy parametrach zapytania SQL aby deterministycznie uzyskać nieobsłuzony wyjątek.
 
 ---
 
