@@ -138,6 +138,19 @@ VALUES
     N'Anna Nowak',
     N'Problem wystêpuje od rana.'
 );
+
+INSERT INTO dbo.TicketComments
+(
+    TicketId,
+    Author,
+    Content
+)
+VALUES
+(
+    2,
+    N'Jan Kowalski',
+    N'Problem nadal wystêpuje.'
+);
 GO
 
 ------------------------------------------------------------
