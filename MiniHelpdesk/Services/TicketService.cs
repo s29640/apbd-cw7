@@ -35,10 +35,18 @@ public class TicketService : ITicketService
         ArgumentNullException.ThrowIfNull(request);
 
         if (string.IsNullOrWhiteSpace(request.Title))
-            throw new ArgumentException(nameof(request.Title));
+        {
+            throw new ArgumentException(
+                "Ticket title is required. Please enter a title before creating the ticket.",
+                nameof(request.Title));
+        }
 
         if (string.IsNullOrWhiteSpace(request.FirstCommentContent))
-            throw new ArgumentException(nameof(request.FirstCommentContent));
+        {
+            throw new ArgumentException(
+                "First comment content is required. Please enter an initial comment before creating the ticket.",
+                nameof(request.FirstCommentContent));
+        }
 
         return _unitOfWork.ExecuteInTransactionAsync(async () =>
         {

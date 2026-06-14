@@ -96,7 +96,9 @@ public class TicketRepository : ITicketRepository
 
         command.Parameters.Add("@Title", SqlDbType.NVarChar, 200).Value = ticket.Title;
 
-        command.Parameters.Add("@Description", SqlDbType.NVarChar).Value = ticket.Description ?? (object)DBNull.Value;
+        // Zostawiony brak obsługi null w celu testowania obsługi błędow
+        //command.Parameters.Add("@Description", SqlDbType.NVarChar).Value = ticket.Description ?? (object)DBNull.Value;
+        command.Parameters.Add("@Description", SqlDbType.NVarChar).Value = ticket.Description;
 
         command.Parameters.Add("@Status", SqlDbType.NVarChar, 20).Value =  ticket.Status;
 
@@ -117,9 +119,11 @@ public class TicketRepository : ITicketRepository
 
         command.Parameters.Add("@TicketId", SqlDbType.Int).Value = comment.TicketId;
 
-        command.Parameters.Add("@Author", SqlDbType.NVarChar, 100).Value = comment.Author;
+        command.Parameters.Add("@Author", SqlDbType.NVarChar, 100).Value 
+            = string.IsNullOrWhiteSpace(comment.Author) ? DBNull.Value : comment.Author;
 
-        command.Parameters.Add("@Content", SqlDbType.NVarChar).Value = comment.Content;
+        command.Parameters.Add("@Content", SqlDbType.NVarChar).Value
+            = string.IsNullOrWhiteSpace(comment.Content) ? DBNull.Value : comment.Content;
 
         command.Parameters.Add("@CreatedAt", SqlDbType.DateTime2).Value = comment.CreatedAt;
 
