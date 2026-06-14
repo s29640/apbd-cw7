@@ -1,8 +1,12 @@
+using MiniHelpdesk.Contracts;
+using MiniHelpdesk.Infrastructure.Database;
 using MiniHelpdesk.Infrastructure.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddScoped<ISqlSession, SqlSession>();
+builder.Services.AddScoped<IUnitOfWork, SqlUnitOfWork>();
 builder.Services.AddScoped<ITicketRepository, TicketRepository>();
 builder.Services.AddControllersWithViews();
 

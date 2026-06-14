@@ -1,7 +1,7 @@
 ﻿using Microsoft.Data.SqlClient;
 using MiniHelpdesk.Models;
 
-namespace MiniHelpdesk.Infrastructure.Repositories;
+namespace MiniHelpdesk.Contracts;
 
 public interface ITicketRepository
 {
@@ -11,9 +11,9 @@ public interface ITicketRepository
 
     Task<IReadOnlyList<TicketComment>> GetCommentsAsync(int ticketId);
 
-    Task<int> InsertTicketAsync(Ticket ticket, SqlConnection connection, SqlTransaction transaction);
+    Task<int> InsertTicketAsync(Ticket ticket);
 
-    Task<int> InsertCommentAsync(TicketComment comment, SqlConnection connection, SqlTransaction transaction);
+    Task<int> InsertCommentAsync(TicketComment comment);
 
     Task CloseAsync(int id);
 }

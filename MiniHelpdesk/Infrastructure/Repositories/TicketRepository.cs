@@ -1,32 +1,30 @@
-﻿using System.Data;
-using Microsoft.Data.SqlClient;
+﻿using Microsoft.Data.SqlClient;
+using MiniHelpdesk.Contracts;
+using MiniHelpdesk.Infrastructure.Database;
 using MiniHelpdesk.Infrastructure.Mappers;
 using MiniHelpdesk.Models;
+using System.Data;
 
 namespace MiniHelpdesk.Infrastructure.Repositories;
 
 public class TicketRepository : ITicketRepository
 {
-    private readonly string _connectionString;
+    private readonly ISqlSession _session;
 
-    public TicketRepository(IConfiguration configuration)
+    public TicketRepository(ISqlSession session)
     {
-        _connectionString = configuration.GetConnectionString("DefaultConnection")
-            ?? throw new InvalidOperationException("Brak connection string DefaultConnection.");
+        _session = session;
     }
 
     public async Task<IReadOnlyList<Ticket>> GetAllAsync()
     {
         var result = new List<Ticket>();
 
-        await using var connection = new SqlConnection(_connectionString);
-        await connection.OpenAsync();
-
         await using var command = new SqlCommand("""
             SELECT Id, Title, Description, Status, CreatedAt
             FROM dbo.Tickets
             ORDER BY CreatedAt DESC;
-            """, connection);
+            """, _session.Connection, _session.Transaction);
 
         await using var reader = await command.ExecuteReaderAsync();
 
@@ -40,14 +38,11 @@ public class TicketRepository : ITicketRepository
 
     public async Task<Ticket?> GetByIdAsync(int id)
     {
-        await using var connection = new SqlConnection(_connectionString);
-        await connection.OpenAsync();
-
         await using var command = new SqlCommand("""
             SELECT Id, Title, Description, Status, CreatedAt
             FROM dbo.Tickets
             WHERE Id = @Id;
-            """, connection);
+            """, _session.Connection, _session.Transaction);
 
         command.Parameters.Add("@Id", SqlDbType.Int).Value = id;
 
@@ -60,15 +55,12 @@ public class TicketRepository : ITicketRepository
     {
         var result = new List<TicketComment>();
 
-        await using var connection = new SqlConnection(_connectionString);
-        await connection.OpenAsync();
-
         await using var command = new SqlCommand("""
             SELECT Id, TicketId, Author, Content, CreatedAt
             FROM dbo.TicketComments
             WHERE TicketId = @TicketId
             ORDER BY CreatedAt ASC;
-            """, connection);
+            """, _session.Connection, _session.Transaction);
 
         command.Parameters.Add("@TicketId", SqlDbType.Int).Value = ticketId;
 
@@ -84,26 +76,23 @@ public class TicketRepository : ITicketRepository
 
     public async Task<int> DeleteTicketAsync(int id)
     {
-        await using var connection = new SqlConnection(_connectionString);
-        await connection.OpenAsync();
-
         await using var command = new SqlCommand("""
         DELETE FROM dbo.Tickets
         WHERE Id = @Id;
-        """, connection);
+        """, _session.Connection, _session.Transaction);
 
         command.Parameters.Add("@Id", SqlDbType.Int).Value = id;
 
         return await command.ExecuteNonQueryAsync();
     }
 
-    public async Task<int> InsertTicketAsync(Ticket ticket, SqlConnection connection, SqlTransaction transaction)
+    public async Task<int> InsertTicketAsync(Ticket ticket)
     {
         await using var command = new SqlCommand("""
             INSERT INTO dbo.Tickets (Title, Description, Status, CreatedAt)
             OUTPUT INSERTED.Id
             VALUES (@Title, @Description, @Status, @CreatedAt);
-            """, connection, transaction);
+            """, _session.Connection, _session.Transaction);
 
         command.Parameters.Add("@Title", SqlDbType.NVarChar, 200).Value = ticket.Title;
 
@@ -118,13 +107,13 @@ public class TicketRepository : ITicketRepository
         return Convert.ToInt32(result);
     }
 
-    public async Task<int> InsertCommentAsync(TicketComment comment,SqlConnection connection,SqlTransaction transaction)
+    public async Task<int> InsertCommentAsync(TicketComment comment)
     {
         await using var command = new SqlCommand("""
         INSERT INTO dbo.TicketComments(TicketId, Author, Content, CreatedAt)
         OUTPUT INSERTED.Id
         VALUES (@TicketId, @Author, @Content, @CreatedAt);
-        """, connection, transaction);
+        """, _session.Connection, _session.Transaction);
 
         command.Parameters.Add("@TicketId", SqlDbType.Int).Value = comment.TicketId;
 
@@ -141,13 +130,10 @@ public class TicketRepository : ITicketRepository
 
     public async Task<int> DeleteCommentAsync(int id)
     {
-        await using var connection = new SqlConnection(_connectionString);
-        await connection.OpenAsync();
-
         await using var command = new SqlCommand("""
         DELETE FROM dbo.TicketComments
         WHERE Id = @Id;
-        """, connection);
+        """, _session.Connection, _session.Transaction);
 
         command.Parameters.Add("@Id", SqlDbType.Int).Value = id;
 
@@ -156,14 +142,11 @@ public class TicketRepository : ITicketRepository
 
     public async Task CloseAsync(int id)
     {
-        await using var connection = new SqlConnection(_connectionString);
-        await connection.OpenAsync();
-
         await using var command = new SqlCommand("""
             UPDATE dbo.Tickets
             SET Status = @Status
             WHERE Id = @Id;
-            """, connection);
+            """, _session.Connection, _session.Transaction);
 
         command.Parameters.Add("@Status", SqlDbType.NVarChar, 20).Value =  TicketStatus.Closed;
 
