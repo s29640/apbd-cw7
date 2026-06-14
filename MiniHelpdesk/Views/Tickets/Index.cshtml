@@ -1,0 +1,45 @@
+﻿@model IReadOnlyList<MiniHelpdesk.Models.Ticket>
+
+@{
+    ViewData["Title"] = "Tickets";
+}
+
+<h1>Tickets</h1>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">
+        New Ticket
+    </a>
+</p>
+
+<table class="table table-striped table-hover">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Title</th>
+            <th>Status</th>
+            <th>Created</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+
+        @foreach (var ticket in Model)
+        {
+            <tr>
+                <td>@ticket.Id</td>
+                <td>@ticket.Title</td>
+                <td>@ticket.Status</td>
+                <td>@ticket.CreatedAt</td>
+                <td>
+                    <a asp-action="Details"
+                           asp-route-id="@ticket.Id"
+                           class="btn btn-sm btn-secondary">
+                        Details
+                    </a>
+                </td>
+            </tr>
+        }
+
+    </tbody>
+</table>

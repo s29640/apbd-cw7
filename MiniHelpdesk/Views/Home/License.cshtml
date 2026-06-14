@@ -1,0 +1,91 @@
+﻿@model string
+
+@{
+    ViewData["Title"] = "License";
+}
+
+<div class="container">
+
+    <h1 class="display-5">
+        Mini Helpdesk
+    </h1>
+
+    <p class="lead">
+        Ticket Management System
+    </p>
+
+    <hr />
+
+    <dl class="row">
+
+        <dt class="col-sm-3">
+            Author
+        </dt>
+
+        <dd class="col-sm-9">
+            Robert Sendys
+        </dd>
+
+        <dt class="col-sm-3">
+            Project
+        </dt>
+
+        <dd class="col-sm-9">
+            APBD – Laboratory Exercise 7
+        </dd>
+
+        <dt class="col-sm-3">
+            Technology
+        </dt>
+
+        <dd class="col-sm-9">
+            ASP.NET Core MVC<br />
+            ADO.NET<br />
+            SQL Server 2022<br />
+            xUnit
+        </dd>
+
+    </dl>
+
+    <hr />
+
+    <div class="accordion mb-4" id="licenseAccordion">
+
+        <div class="accordion-item">
+
+            <h2 class="accordion-header">
+
+                <button class="accordion-button collapsed"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#licenseBody"
+                        aria-expanded="false">
+
+                    LICENSE
+
+                </button>
+
+            </h2>
+
+            <div id="licenseBody"
+                 class="accordion-collapse collapse">
+
+                <div class="accordion-body">
+
+                    <pre class="mb-0">@Model</pre>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <a asp-controller="Home"
+           asp-action="Index"
+           class="btn btn-secondary">
+        Back
+    </a>
+
+</div>

@@ -1,8 +1,61 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Mini Helpdesk";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="text-center mt-5">
+
+    <h1 class="display-3">
+        Mini Helpdesk
+    </h1>
+
+    <p class="lead">
+        Ticket Management System
+    </p>
+
+    <div class="text-muted mb-4">
+        ASP.NET Core MVC • ADO.NET • SQL Server 2022
+    </div>
+
+    <hr class="w-50 mx-auto mb-5" />
+
+    <div class="row justify-content-center">
+
+        <div class="col-md-6 col-lg-4">
+
+            <div class="d-grid gap-3">
+
+                <a asp-controller="Home"
+                       asp-action="Index"
+                       class="btn btn-outline-secondary btn-lg">
+                    🏠 Home
+                </a>
+
+                <a asp-controller="Tickets"
+                       asp-action="Index"
+                       class="btn btn-primary btn-lg">
+                    🎫 Tickets
+                </a>
+
+                <a asp-controller="Home"
+                       asp-action="Readme"
+                       class="btn btn-success btn-lg">
+                    📘 README
+                </a>
+
+                <a asp-controller="Home"
+                       asp-action="License"
+                       class="btn btn-outline-info btn-lg">
+                    📄 License
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="mt-5 text-muted">
+        Laboratory Exercise 7
+    </div>
+
 </div>

@@ -1,0 +1,115 @@
+﻿@model MiniHelpdesk.ViewModels.TicketDetailsViewModel
+
+@{
+    ViewData["Title"] = "Ticket Details";
+}
+
+<h1>Ticket Details</h1>
+
+<div class="card mb-4">
+
+    <div class="card-header">
+        Ticket #@Model.Ticket.Id
+    </div>
+
+    <div class="card-body">
+
+        <dl class="row">
+
+            <dt class="col-sm-3">
+                Title
+            </dt>
+
+            <dd class="col-sm-9">
+                @Model.Ticket.Title
+            </dd>
+
+            <dt class="col-sm-3">
+                Description
+            </dt>
+
+            <dd class="col-sm-9">
+                @Model.Ticket.Description
+            </dd>
+
+            <dt class="col-sm-3">
+                Status
+            </dt>
+
+            <dd class="col-sm-9">
+                @Model.Ticket.Status
+            </dd>
+
+            <dt class="col-sm-3">
+                Created
+            </dt>
+
+            <dd class="col-sm-9">
+                @Model.Ticket.CreatedAt
+            </dd>
+
+        </dl>
+
+    </div>
+
+</div>
+
+@if (Model.Ticket.Status == MiniHelpdesk.Models.TicketStatus.Open)
+{
+    <form asp-action="Close"
+          method="post">
+
+        <input type="hidden"
+               name="id"
+               value="@Model.Ticket.Id" />
+
+        <button type="submit"
+                class="btn btn-warning">
+            Close Ticket
+        </button>
+
+    </form>
+
+    <hr />
+}
+
+<h3>Comments</h3>
+
+@if (!Model.Comments.Any())
+{
+    <p>No comments.</p>
+}
+else
+{
+    <table class="table table-striped">
+
+        <thead>
+            <tr>
+                <th>Author</th>
+                <th>Comment</th>
+                <th>Created</th>
+            </tr>
+        </thead>
+
+        <tbody>
+
+            @foreach (var comment in Model.Comments)
+            {
+                <tr>
+                    <td>@comment.Author</td>
+                    <td>@comment.Content</td>
+                    <td>@comment.CreatedAt</td>
+                </tr>
+            }
+
+        </tbody>
+
+    </table>
+}
+
+<p class="mt-3">
+    <a asp-action="Index"
+           class="btn btn-secondary">
+        Back
+    </a>
+</p>

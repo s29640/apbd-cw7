@@ -1,0 +1,16 @@
+﻿@model string
+
+@{
+    ViewData["Title"] = "README";
+}
+
+<div class="markdown-body">
+    @Html.Raw(Model)
+
+    <a asp-controller="Home"
+           asp-action="Index"
+           class="btn btn-secondary">
+        Back
+    </a>
+
+</div>

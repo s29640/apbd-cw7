@@ -1,4 +1,8 @@
 <Solution>
+  <Folder Name="/Elementy rozwiązania/">
+    <File Path="LICENSE" />
+    <File Path="README.md" />
+  </Folder>
   <Project Path="MiniHelpdesk.Tests/MiniHelpdesk.Tests.csproj" />
   <Project Path="MiniHelpdesk/MiniHelpdesk.csproj" />
 </Solution>
