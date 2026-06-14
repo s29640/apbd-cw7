@@ -1,6 +1,7 @@
 using MiniHelpdesk.Contracts;
 using MiniHelpdesk.Infrastructure.Database;
 using MiniHelpdesk.Infrastructure.Repositories;
+using MiniHelpdesk.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,6 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddScoped<ISqlSession, SqlSession>();
 builder.Services.AddScoped<IUnitOfWork, SqlUnitOfWork>();
 builder.Services.AddScoped<ITicketRepository, TicketRepository>();
+builder.Services.AddScoped<ITicketService, TicketService>();
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
